@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# This script queries DNS records for a domain and its subdomains (www, lb-01, web-01, web-02).
+# It outputs the subdomain record type and destination.
+
+# Function to query DNS and display the results
+get_dns_record() {
+    DOMAIN=$1
+    SUBDOMAIN=$2
+    RESULT=$(dig +short ${SUBDOMAIN}.${DOMAIN})
+    if [ -z "$RESULT" ]; then
+        echo "No DNS record found for ${SUBDOMAIN}.${DOMAIN}"
+    else
+        echo "The subdomain ${SUBDOMAIN} is a A record and points to ${RESULT}"
+    fi
+}
+
+# Check for valid arguments
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <domain> [subdomain]"
+    exit 1
+fi
+
+DOMAIN=$1
+
+# If only domain is provided, check for the standard subdomains
+if [ $# -eq 1 ]; then
+    for SUBDOMAIN in www lb-01 web-01 web-02; do
+        get_dns_record $DOMAIN $SUBDOMAIN
+    done
+else
+    # If subdomain is provided, only check for that specific subdomain
+    get_dns_record $DOMAIN $2
+fi
