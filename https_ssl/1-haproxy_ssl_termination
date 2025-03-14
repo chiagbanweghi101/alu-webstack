@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# This script installs Certbot, generates an SSL certificate, and configures HAProxy for SSL termination.
+# This script configures HAProxy to handle SSL termination for the subdomain www.webpeter.tech.
 
 # Install Certbot and HAProxy if not already installed
 sudo apt update
 sudo apt install -y certbot haproxy
 
-# Use Certbot to generate the SSL certificate for www.yourdomain.com
-sudo certbot certonly --standalone -d www.yourdomain.com --agree-tos --email your-email@example.com
+# Use Certbot to generate the SSL certificate for www.webpeter.tech
+sudo certbot certonly --standalone -d www.webpeter.tech --agree-tos --email your-email@example.com
 
 # Backup the current HAProxy configuration
 sudo cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak
@@ -29,7 +29,7 @@ defaults
 
 # Frontend to handle HTTPS traffic
 frontend https-in
-  bind *:443 ssl crt /etc/letsencrypt/live/www.yourdomain.com/fullchain.pem key /etc/letsencrypt/live/www.yourdomain.com/privkey.pem
+  bind *:443 ssl crt /etc/letsencrypt/live/www.webpeter.tech/fullchain.pem key /etc/letsencrypt/live/www.webpeter.tech/privkey.pem
   default_backend web-servers
 
 # Backend to distribute traffic using round-robin
@@ -43,4 +43,4 @@ EOL"
 sudo systemctl enable haproxy
 sudo systemctl restart haproxy
 
-echo "HAProxy is configured for SSL termination on https://www.yourdomain.com"
+echo "HAProxy is configured for SSL termination on https://www.webpeter.tech"
